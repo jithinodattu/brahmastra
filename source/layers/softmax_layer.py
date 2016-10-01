@@ -6,7 +6,7 @@ import theano.tensor as T
 
 class SoftMaxLayer(object):
 
-	def __init__(self, input, n_in, n_out):
+	def __init__(self, n_in, n_out):
 
 		self.W = theano.shared(
 			value=np.zeros(
@@ -24,8 +24,8 @@ class SoftMaxLayer(object):
 			borrow=True
 			)
 
-		self.input = input
+		self.input = None
 
-		self.output = T.nnet.softmax(T.dot(input, self.W) + self.b)
+		self.output = T.nnet.softmax(T.dot(self.input, self.W) + self.b)
 
 		self.params = [self.W, self.b]

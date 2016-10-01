@@ -5,12 +5,17 @@ import gzip
 import os
 import sys
 
-def mnist(dataset):
+import numpy
+
+import theano 
+import theano.tensor as T
+
+def mnist(dataset='mnist.pkl.gz'):
     data_dir, data_file = os.path.split(dataset)
     if data_dir == "" and not os.path.isfile(dataset):
         new_path = os.path.join(
             os.path.split(__file__)[0],
-            "..",
+            "../..",
             "data",
             dataset
         )

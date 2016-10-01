@@ -1,4 +1,6 @@
 
+from __future__ import print_function
+
 import numpy
 
 import theano
@@ -33,7 +35,7 @@ class Sequential(object):
 		else:
 			raise NotImplementedError()
 
-	def train(learning_rate=0.13, n_epochs=1000, datasets, batch_size=600):
+	def train(datasets, learning_rate=0.13, n_epochs=1000, batch_size=600):
 		train_set_x, train_set_y = datasets[0]
 		valid_set_x, valid_set_y = datasets[1]
 		test_set_x, test_set_y = datasets[2]
