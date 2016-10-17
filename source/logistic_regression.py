@@ -6,9 +6,12 @@ from utils import load_data
 
 mnist_data = load_data.mnist()
 
-model = Sequential()
-model.add(InputLayer(input=mnist_data, n_in=28 * 28, n_out=10))
-model.add(SoftMaxLayer(n_in=28 * 28, n_out=10))
-model.add(OutputLayer())
+input_dim = 28 * 28
+output_dim = 10
 
-model.optimize()
+model = Sequential()
+model.add(DenseLayer(n_in=input_dim, n_out=output_dim))
+model.add(ActivationLayer(activ_fn=None))
+model.add(SoftMaxLayer())
+
+model.optimize(dataset=mnist_data)

@@ -15,14 +15,14 @@ class Sequential(object):
 		self.layers.append(layer)
 
 	def _connect_layers(self):
-		for layer, next_layer in zip(self.layers[:-2], self.layers[1:-1]):
+		for layer, next_layer in zip(self.layers[:-1], self.layers[1:]):
 			next_layer.input = layer.output
-		self.input = self.layers[0].output
-		self.p_y_given_x = self.layers[-2].output
+
 		self.output = self.layers[-1].output
+		self.y_pred = T.argmax(self.output, axis=1)
 
 	def negative_log_likelihood(self, y):
-		return -T.mean(T.log(self.p_y_given_x)[T.arange(y.shape[0]), y])
+		return -T.mean(T.log(self.output)[T.arange(y.shape[0]), y])
 
 	def errors(self, y):
 		if y.ndim != self.y_pred.ndim:
@@ -31,14 +31,16 @@ class Sequential(object):
 				('y', y.type, 'y_pred', self.y_pred.type)
 			)
 		if y.dtype.startswith('int'):
-			return T.mean(T.neq(self.output, y))
+			return T.mean(T.neq(self.y_pred, y))
 		else:
 			raise NotImplementedError()
 
-	def train(datasets, learning_rate=0.13, n_epochs=1000, batch_size=600):
-		train_set_x, train_set_y = datasets[0]
-		valid_set_x, valid_set_y = datasets[1]
-		test_set_x, test_set_y = datasets[2]
+	def optimize(self, dataset, learning_rate=0.13, n_epochs=1000, batch_size=600):
+		self._connect_layers()
+
+		train_set_x, train_set_y = dataset[0]
+		valid_set_x, valid_set_y = dataset[1]
+		test_set_x, test_set_y = dataset[2]
 
 		n_train_batches = train_set_x.get_value(borrow=True).shape[0] // batch_size
 		n_valid_batches = valid_set_x.get_value(borrow=True).shape[0] // batch_size
@@ -48,7 +50,7 @@ class Sequential(object):
 		x = T.matrix('x')
 		y = T.ivector('y')
 
-		cost = classifier.negative_log_likelihood(y)
+		cost = self.negative_log_likelihood(y)
 
 		test_model = theano.function(
 			inputs=[index],
