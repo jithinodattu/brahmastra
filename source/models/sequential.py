@@ -26,8 +26,7 @@ class Sequential(object):
 			next_layer.feedforward(curr_output)
 			curr_output = next_layer.output
 
-		self.output = self.layers[-1].output
-		theano.printing.debugprint(self.output)
+		self.output = curr_output
 		self.y_pred = T.argmax(self.output, axis=1)
 
 	def negative_log_likelihood(self, y):
