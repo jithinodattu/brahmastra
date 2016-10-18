@@ -11,4 +11,5 @@ class SoftMaxLayer(Layer):
 	def __init__(self):
 		super(SoftMaxLayer, self).__init__()
 		
-		self.output = T.nnet.softmax(self.input)
+	def feedforward(self, input):
+		self.output = T.nnet.softmax(input)

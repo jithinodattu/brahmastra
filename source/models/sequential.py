@@ -4,7 +4,12 @@ from __future__ import print_function
 import numpy
 
 import theano
-import theano.tensor as T 
+import theano.tensor as T
+from theano import pp 
+import timeit
+import six.moves.cPickle as pickle
+import os
+import sys
 
 class Sequential(object):
 
@@ -14,11 +19,15 @@ class Sequential(object):
 	def add(self, layer):
 		self.layers.append(layer)
 
-	def _connect_layers(self):
-		for layer, next_layer in zip(self.layers[:-1], self.layers[1:]):
-			next_layer.input = layer.output
+	def _connect_layers(self, x):
+		self.layers[0].feedforward(x)
+		curr_output = self.layers[0].output
+		for next_layer in self.layers[1:]:
+			next_layer.feedforward(curr_output)
+			curr_output = next_layer.output
 
 		self.output = self.layers[-1].output
+		theano.printing.debugprint(self.output)
 		self.y_pred = T.argmax(self.output, axis=1)
 
 	def negative_log_likelihood(self, y):
@@ -36,8 +45,6 @@ class Sequential(object):
 			raise NotImplementedError()
 
 	def optimize(self, dataset, learning_rate=0.13, n_epochs=1000, batch_size=600):
-		self._connect_layers()
-
 		train_set_x, train_set_y = dataset[0]
 		valid_set_x, valid_set_y = dataset[1]
 		test_set_x, test_set_y = dataset[2]
@@ -50,7 +57,11 @@ class Sequential(object):
 		x = T.matrix('x')
 		y = T.ivector('y')
 
+		self._connect_layers(x)
+
 		cost = self.negative_log_likelihood(y)
+
+		theano.printing.debugprint(cost)
 
 		test_model = theano.function(
 			inputs=[index],
@@ -70,11 +81,11 @@ class Sequential(object):
 			}
 		)
 
-		g_W = T.grad(cost=cost, wrt=self.layers[1].W)
-		g_b = T.grad(cost=cost, wrt=self.layers[1].b)
+		g_W = T.grad(cost=cost, wrt=self.layers[0].W)
+		g_b = T.grad(cost=cost, wrt=self.layers[0].b)
 
-		updates = [(self.layers[1].W, self.layers[1].W - learning_rate * g_W),
-			   (self.layers[1].b, self.layers[1].b - learning_rate * g_b)]
+		updates = [(self.layers[0].W, self.layers[0].W - learning_rate * g_W),
+			   (self.layers[0].b, self.layers[0].b - learning_rate * g_b)]
 
 		train_model = theano.function(
 			inputs=[index],
@@ -145,7 +156,7 @@ class Sequential(object):
 						)
 
 						with open('best_model.pkl', 'wb') as f:
-							pickle.dump(classifier, f)
+							pickle.dump(self, f)
 
 				if patience <= iter:
 					done_looping = True
