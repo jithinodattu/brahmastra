@@ -3,13 +3,13 @@ from __future__ import print_function
 
 import numpy
 
-import theano
-import theano.tensor as T
-from theano import pp 
-import timeit
-import six.moves.cPickle as pickle
 import os
 import sys
+import theano
+import timeit
+import six.moves.cPickle as pickle
+import theano.tensor as T
+from theano import pp 
 
 class Sequential(object):
 
