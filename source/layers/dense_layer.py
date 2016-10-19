@@ -28,5 +28,7 @@ class DenseLayer(Layer):
 			borrow=True
 			)
 
+		self.params = [self.W, self.b]
+
 	def feedforward(self, input):
 		self.output = T.dot(input, self.W) + self.b
