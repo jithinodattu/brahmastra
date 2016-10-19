@@ -22,9 +22,14 @@ class Sequential(object):
 	def _connect_layers(self, x):
 		self.layers[0].feedforward(x)
 		curr_output = self.layers[0].output
+		self.params = []
+		if hasattr(self.layers[0], 'params'):
+			self.params = self.params + self.layers[0].params
 		for next_layer in self.layers[1:]:
 			next_layer.feedforward(curr_output)
 			curr_output = next_layer.output
+			if hasattr(next_layer, 'params'):
+				self.params = self.params + next_layer.params
 
 		self.output = curr_output
 		self.y_pred = T.argmax(self.output, axis=1)
@@ -60,8 +65,6 @@ class Sequential(object):
 
 		cost = self.negative_log_likelihood(y)
 
-		theano.printing.debugprint(cost)
-
 		test_model = theano.function(
 			inputs=[index],
 			outputs=self.errors(y),
@@ -80,11 +83,12 @@ class Sequential(object):
 			}
 		)
 
-		g_W = T.grad(cost=cost, wrt=self.layers[0].W)
-		g_b = T.grad(cost=cost, wrt=self.layers[0].b)
+		gparams = [T.grad(cost, param) for param in self.params]
 
-		updates = [(self.layers[0].W, self.layers[0].W - learning_rate * g_W),
-			   (self.layers[0].b, self.layers[0].b - learning_rate * g_b)]
+		updates = [
+	        (param, param - learning_rate * gparam)
+	        for param, gparam in zip(self.params, gparams)
+	    ]
 
 		train_model = theano.function(
 			inputs=[index],
