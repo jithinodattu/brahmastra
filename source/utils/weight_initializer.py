@@ -1,4 +1,5 @@
 
+import theano
 import numpy as np 
 import activation_function
 
@@ -22,6 +23,8 @@ reference:
 
 """
 
+rng = np.random.RandomState()
+
 def gloret(n_in, n_out, activ_fn):
 	W_values = np.asarray(
 			rng.uniform(
@@ -31,6 +34,6 @@ def gloret(n_in, n_out, activ_fn):
 				),
 			dtype=theano.config.floatX
 			)
-	if activation == activation_function.sigmoid:
+	if activ_fn == activation_function.sigmoid:
 				W_values *= 4
 	return W_values

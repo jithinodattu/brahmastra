@@ -25,7 +25,7 @@ class DenseLayer(Layer):
 			borrow=True
 			)
 
-		b_values = np.zeros((n_out,), dtype=theano.config.floatX)
+		b_values = numpy.zeros((n_out,), dtype=theano.config.floatX)
 		self.b = theano.shared(
 			value=b_values,
 			name='b',
