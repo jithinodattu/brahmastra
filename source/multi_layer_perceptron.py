@@ -14,6 +14,7 @@ from layers import *
 from models import *
 from utils import load_data
 from utils.activation_function import tanh
+from utils.weight_initializer import gloret
 
 mnist_data = load_data.mnist()
 
@@ -27,15 +28,24 @@ model = Sequential()
 Hidden layer: Here the network performs non linear tranformation (here we do tanh) ,
 and represents the input into some higher dimentions (here we set hidden_dim=500), 
 """
-model.add(DenseLayer(n_in=input_dim, n_out=hidden_dim))
-model.add(ActivationLayer(activ_fn=tanh))
-
+model.add(
+	DenseLayer(
+		n_in=input_dim, 
+		n_out=hidden_dim,
+		activ_fn=tanh,
+		w_initializer=gloret
+		))
 """
 Output of the hidden layer is fed to outputlayer which will act a logistic regression 
 classifier.
 """
-model.add(DenseLayer(n_in=hidden_dim, n_out=output_dim))
-model.add(ActivationLayer(activ_fn=tanh))
+model.add(
+	DenseLayer(
+		n_in=hidden_dim, 
+		n_out=output_dim,
+		activ_fn=tanh,
+		w_initializer=gloret
+		))
 
 model.add(SoftMaxLayer())
 
