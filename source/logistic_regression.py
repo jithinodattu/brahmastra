@@ -34,12 +34,18 @@ output_dim = 10
 
 """
 Logistic regression does not involve non-linear tranformation of inputs. Hence 
-activation function is set to None. It is also advised not to include ActivationLayer 
-in the model if not required, still would work.
+activation function is set to None.
 """
 model = Sequential()
-model.add(DenseLayer(n_in=input_dim, n_out=output_dim))
-model.add(ActivationLayer(activ_fn=None)) 				# Not required!
+
+model.add(
+	DenseLayer(
+		n_in=input_dim, 
+		n_out=output_dim,
+		activ_fn=None
+		)
+	)
+
 model.add(SoftMaxLayer())
 
 model.optimize(dataset=mnist_data)
