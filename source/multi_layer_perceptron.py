@@ -44,7 +44,7 @@ model.add(
 	DenseLayer(
 		n_in=hidden_dim, 
 		n_out=output_dim,
-		activ_fn=tanh,
+		activ_fn=None,
 		w_initializer=gloret
 		))
 
