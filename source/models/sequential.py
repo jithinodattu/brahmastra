@@ -48,7 +48,13 @@ class Sequential(object):
 		else:
 			raise NotImplementedError()
 
-	def optimize(self, dataset, learning_rate=0.13, n_epochs=1000, batch_size=600):
+	def optimize(self, 
+		dataset, 
+		learning_rate=0.13, 
+		n_epochs=1000, 
+		batch_size=600,
+		regularizer=None,
+		reg_lambda=0.1):
 		train_set_x, train_set_y = dataset[0]
 		valid_set_x, valid_set_y = dataset[1]
 		test_set_x, test_set_y = dataset[2]
@@ -64,6 +70,9 @@ class Sequential(object):
 		self._connect_layers(x)
 
 		cost = self.negative_log_likelihood(y)
+
+		if regularizer:
+			cost = cost + reg_lambda * regularizer(self.params)
 
 		test_model = theano.function(
 			inputs=[index],

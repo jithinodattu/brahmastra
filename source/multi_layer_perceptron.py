@@ -15,6 +15,7 @@ from models import *
 from utils import load_data
 from utils.activation_function import tanh
 from utils.weight_initializer import gloret
+from utils.regularizer import L2_sqr
 
 mnist_data = load_data.mnist()
 
@@ -49,4 +50,8 @@ model.add(
 
 model.add(SoftMaxLayer())
 
-model.optimize(dataset=mnist_data)
+model.optimize(
+	dataset=mnist_data,
+	regularizer=L2_sqr,
+	reg_lambda=0.0001
+	)
