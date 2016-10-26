@@ -1,4 +1,11 @@
+"""
+Learning a complex function such object detection requires deep architecture,
+that transforms inputs into series of abstract representations. 
 
+References:
+ - Y. LeCun, L. Bottou, Y. Bengio and P. Haffner:
+   Gradient-Based Learning Applied to Document Recognition
+"""
 from layers import *
 from models import *
 from utils import load_data
