@@ -25,12 +25,12 @@ reference:
 
 rng = np.random.RandomState()
 
-def gloret(n_in, n_out, activ_fn):
+def gloret(n_in, n_out, size, activ_fn=None):
 	W_values = np.asarray(
 			rng.uniform(
 				low=-np.sqrt(6. / (n_in+n_out)),
 				high=np.sqrt(6. / (n_in+n_out)),
-				size=(n_in,n_out)
+				size=size
 				),
 			dtype=theano.config.floatX
 			)

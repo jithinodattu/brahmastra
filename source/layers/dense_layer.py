@@ -11,7 +11,7 @@ class DenseLayer(Layer):
 		super(DenseLayer, self).__init__()
 
 		if w_initializer:
-			W_value = w_initializer(n_in, n_out, activ_fn)
+			W_value = w_initializer(n_in, n_out, (n_in,n_out), activ_fn)
 		else:
 			W_value = numpy.zeros(
 				(n_in, n_out),

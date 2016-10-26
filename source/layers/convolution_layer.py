@@ -11,8 +11,10 @@ class Convolution2DLayer(Layer):
 
 	def __init__(self, filter_shape, image_shape, activ_fn=None, w_initializer=gloret):
 
+		n_in = numpy.prod(filter_shape[1:])
+		n_out = filter_shape[0]
 		if w_initializer:
-			W_value = w_initializer(filter_shape[0], filter_shape[1], activ_fn)
+			W_value = w_initializer(n_in, n_out, filter_shape, activ_fn)
 		else:
 			W_value = numpy.zeros(
 				(filter_shape[0], filter_shape[1]),
@@ -35,6 +37,7 @@ class Convolution2DLayer(Layer):
 		self.params = [self.W, self.b]
 
 	def feedforward(self, input):
+		input = input.reshape(self.image_shape)
 		conv_out = conv2d(
 			input=input,
 			filters=self.W,
@@ -44,6 +47,6 @@ class Convolution2DLayer(Layer):
 
 		output = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
 		if self.activ_fn:
-			self.output =activ_fn(output)
+			self.output =self.activ_fn(output)
 		else:
 			self.output = output
