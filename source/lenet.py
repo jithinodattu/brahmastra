@@ -65,5 +65,6 @@ model.add(
 model.add(SoftMaxLayer())
 
 model.optimize(
-	dataset=mnist_data
+	dataset=mnist_data,
+	batch_size=batch_size
 	)
