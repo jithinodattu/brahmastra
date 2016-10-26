@@ -6,3 +6,6 @@ def sigmoid(z):
 
 def tanh(z):
 	return T.tanh(z)
+
+def relu(z):
+	return T.nnet.relu(z)
