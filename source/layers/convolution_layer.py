@@ -5,7 +5,7 @@ import theano.tensor as T
 from theano.tensor.nnet import conv2d
 
 from layer import Layer
-from ..utils.weight_initializer import gloret
+from utils.weight_initializer import gloret
 
 class Convolution2DLayer(Layer):
 
@@ -21,7 +21,7 @@ class Convolution2DLayer(Layer):
 
 		self.W = theano.shared(
 			value=W_value,
-			name='W'
+			name='W',
 			borrow=True
 			)
 
