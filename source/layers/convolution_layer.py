@@ -17,7 +17,7 @@ class Convolution2DLayer(Layer):
 			W_value = w_initializer(n_in, n_out, filter_shape, activ_fn)
 		else:
 			W_value = numpy.zeros(
-				(filter_shape[0], filter_shape[1]),
+				filter_shape,
 				dtype=theano.config.floatX
 				)
 
